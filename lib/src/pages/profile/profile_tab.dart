@@ -14,7 +14,6 @@ class _ProfileTabsState extends State<ProfileTabs> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,
         title: const Text('Perfil do usuário'),
         actions: [IconButton(onPressed: () {}, icon: Icon(Icons.logout))],
       ),
@@ -111,8 +110,6 @@ class _ProfileTabsState extends State<ProfileTabs> {
                       height: 45,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadiusGeometry.circular(20),
                           ),

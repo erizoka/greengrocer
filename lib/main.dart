@@ -19,6 +19,16 @@ class MyApp extends StatelessWidget {
           primary: Colors.green,
         ),
         scaffoldBackgroundColor: Colors.white.withAlpha(190),
+        appBarTheme: AppBarTheme(
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.green,
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green,
+            foregroundColor: Colors.white,
+          ),
+        ),
       ),
       debugShowCheckedModeBanner: false,
       home: const SignInScreen(),

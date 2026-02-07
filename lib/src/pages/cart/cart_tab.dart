@@ -33,11 +33,7 @@ class _CartTabState extends State<CartTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Carrinho'),
-        backgroundColor: Colors.green,
-        foregroundColor: Colors.white,
-      ),
+      appBar: AppBar(title: const Text('Carrinho')),
       body: Column(
         children: [
           Expanded(
@@ -83,7 +79,6 @@ class _CartTabState extends State<CartTab> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadiusGeometry.circular(18),
                       ),
-                      foregroundColor: Colors.white,
                       backgroundColor: CustomColors.customSwatchColor,
                     ),
                     onPressed: () async {
@@ -124,8 +119,6 @@ class _CartTabState extends State<CartTab> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadiusGeometry.circular(20),
                 ),
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.green,
               ),
               onPressed: () => Navigator.of(context).pop(true),
               child: const Text('Sim'),
