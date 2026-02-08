@@ -6,6 +6,7 @@ import 'package:greengrocer/src/config/custom_colors.dart';
 import 'package:badges/badges.dart' as packageBadge;
 import 'package:greengrocer/src/config/app_data.dart' as appData;
 import 'package:greengrocer/src/pages/home/components/item_tile.dart';
+import 'package:greengrocer/src/pages/widgets/app_name_widget.dart';
 
 import 'components/category_tile.dart';
 
@@ -32,21 +33,7 @@ class _HomeTabState extends State<HomeTab> {
       appBar: AppBar(
         backgroundColor: Colors.white.withAlpha(10),
         centerTitle: true,
-        title: Text.rich(
-          TextSpan(
-            style: TextStyle(fontSize: 30),
-            children: [
-              TextSpan(
-                text: 'Green',
-                style: TextStyle(color: CustomColors.customSwatchColor),
-              ),
-              TextSpan(
-                text: 'grocer',
-                style: TextStyle(color: CustomColors.customContrastColor),
-              ),
-            ],
-          ),
-        ),
+        title: AppNameWidget(),
         actions: [
           Padding(
             padding: const EdgeInsets.only(top: 15, right: 15),
