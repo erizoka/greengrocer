@@ -21,7 +21,7 @@ class _HomeTabState extends State<HomeTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white.withAlpha(190),
+        backgroundColor: Colors.white.withAlpha(50),
         centerTitle: true,
         title: Text.rich(
           TextSpan(
