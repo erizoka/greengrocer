@@ -7,6 +7,7 @@ import 'package:badges/badges.dart' as packageBadge;
 import 'package:greengrocer/src/config/app_data.dart' as appData;
 import 'package:greengrocer/src/pages/home/components/item_tile.dart';
 import 'package:greengrocer/src/pages/widgets/app_name_widget.dart';
+import 'package:greengrocer/src/pages/widgets/custom_shimmer.dart';
 
 import 'components/category_tile.dart';
 
@@ -25,6 +26,18 @@ class _HomeTabState extends State<HomeTab> {
 
   void itemSelectedCartAnimations(GlobalKey globalKey) {
     addToCardAnimation(globalKey);
+  }
+
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
   }
 
   @override
@@ -98,41 +111,78 @@ class _HomeTabState extends State<HomeTab> {
             Container(
               padding: const EdgeInsets.only(left: 25),
               height: 40,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (_, i) {
-                  return CategoryTile(
-                    onPressed: () {
-                      setState(() {
-                        selectedCategory = appData.categories[i];
-                      });
-                    },
-                    category: appData.categories[i],
-                    isSelected: appData.categories[i].contains(
-                      selectedCategory,
-                    ),
-                  );
-                },
-                separatorBuilder: (_, i) => const SizedBox(width: 10),
-                itemCount: appData.categories.length,
-              ),
+              child:
+                  !isLoading
+                      ? ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (_, i) {
+                          return CategoryTile(
+                            onPressed: () {
+                              setState(() {
+                                selectedCategory = appData.categories[i];
+                              });
+                            },
+                            category: appData.categories[i],
+                            isSelected: appData.categories[i].contains(
+                              selectedCategory,
+                            ),
+                          );
+                        },
+                        separatorBuilder: (_, i) => const SizedBox(width: 10),
+                        itemCount: appData.categories.length,
+                      )
+                      : ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: List.generate(
+                          10,
+                          (i) => Container(
+                            alignment: AlignmentGeometry.center,
+                            margin: const EdgeInsets.only(right: 12),
+                            child: CustomShimmer(
+                              height: 20,
+                              width: 80,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                        ),
+                      ),
             ),
             Expanded(
-              child: GridView.builder(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  childAspectRatio: 9 / 11.05,
-                ),
-                itemCount: appData.items.length,
-                itemBuilder:
-                    (_, i) => ItemTile(
-                      item: appData.items[i],
-                      cartAnimationMethod: itemSelectedCartAnimations,
-                    ),
-              ),
+              child:
+                  !isLoading
+                      ? GridView.builder(
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                        physics: const BouncingScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 10,
+                              crossAxisSpacing: 10,
+                              childAspectRatio: 9 / 11.05,
+                            ),
+                        itemCount: appData.items.length,
+                        itemBuilder:
+                            (_, i) => ItemTile(
+                              item: appData.items[i],
+                              cartAnimationMethod: itemSelectedCartAnimations,
+                            ),
+                      )
+                      : GridView.count(
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                        physics: const BouncingScrollPhysics(),
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 10,
+                        childAspectRatio: 9 / 11.05,
+                        children: List.generate(
+                          10,
+                          (i) => CustomShimmer(
+                            height: double.infinity,
+                            width: double.infinity,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                      ),
             ),
           ],
         ),
