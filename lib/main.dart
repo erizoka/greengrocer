@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'src/pages/auth/sign_in_screen.dart';
+import 'package:greengrocer/src/pages/splash/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,7 +30,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: const SignInScreen(),
+      home: const SplashScreen(),
     );
   }
 }
