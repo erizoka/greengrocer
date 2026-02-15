@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:greengrocer/src/config/custom_colors.dart';
 import 'package:greengrocer/src/pages/auth/controller/auth_controller.dart';
+import 'package:greengrocer/src/pages/auth/view/components/forgot_password_dialog.dart';
 import 'package:greengrocer/src/pages/widgets/app_name_widget.dart';
 import 'package:greengrocer/src/routes/app_pages.dart';
+import 'package:greengrocer/src/services/utils_services.dart';
 import 'package:greengrocer/src/services/validators.dart';
 
 import '../../widgets/custom_text_field.dart';
@@ -15,6 +17,7 @@ class SignInScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final utilServices = UtilsServices();
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +125,22 @@ class SignInScreen extends StatelessWidget {
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            final bool? result = await showDialog(
+                              context: context,
+                              builder: (_) {
+                                return ForgotPasswordDialog(
+                                  email: emailController.text,
+                                );
+                              },
+                            );
+                            if (result ?? false) {
+                              utilServices.showToast(
+                                msg:
+                                    'Um link de recuperação foi enviado para seu email',
+                              );
+                            }
+                          },
                           child: Text(
                             'Esqueceu a senha?',
                             style: TextStyle(
