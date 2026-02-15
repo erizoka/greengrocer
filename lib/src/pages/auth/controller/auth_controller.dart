@@ -1,11 +1,17 @@
 import 'package:get/get.dart';
+import 'package:greengrocer/src/models/user_model.dart';
 import 'package:greengrocer/src/pages/auth/repository/auth_repository.dart';
 import 'package:greengrocer/src/pages/auth/result/auth_result.dart';
+import 'package:greengrocer/src/routes/app_pages.dart';
+import 'package:greengrocer/src/services/utils_services.dart';
 
 class AuthController extends GetxController {
   RxBool isLoading = false.obs;
 
   final _authRepository = AuthRepository();
+  final utilsServices = UtilsServices();
+
+  UserModel user = UserModel();
 
   Future<void> signIn({required String email, required String password}) async {
     isLoading.value = true;
@@ -19,10 +25,11 @@ class AuthController extends GetxController {
 
     result.when(
       success: (user) {
-        print(user);
+        this.user = user;
+        Get.offAllNamed(PagesRoutes.baseRoute);
       },
       error: (message) {
-        print(message);
+        utilsServices.showToast(msg: message, isError: true);
       },
     );
   }
