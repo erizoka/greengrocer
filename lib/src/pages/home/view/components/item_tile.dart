@@ -3,7 +3,7 @@ import 'package:greengrocer/src/config/custom_colors.dart';
 import 'package:greengrocer/src/models/item_model.dart';
 import 'package:greengrocer/src/services/utils_services.dart';
 
-import '../../product/product_screen.dart';
+import '../../../product/product_screen.dart';
 
 class ItemTile extends StatefulWidget {
   final ItemModel item;
