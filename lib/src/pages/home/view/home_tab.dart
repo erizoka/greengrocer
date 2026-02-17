@@ -27,6 +27,9 @@ class _HomeTabState extends State<HomeTab> {
     addToCardAnimation(globalKey);
   }
 
+  final controller = Get.find<HomeController>();
+  final searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -76,6 +79,10 @@ class _HomeTabState extends State<HomeTab> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: TextFormField(
+                controller: searchController,
+                onChanged: (value) {
+                  controller.searchTitle.value = value;
+                },
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -90,6 +97,21 @@ class _HomeTabState extends State<HomeTab> {
                     color: CustomColors.customContrastColor,
                     size: 21,
                   ),
+                  suffixIcon:
+                      controller.searchTitle.value.isNotEmpty
+                          ? IconButton(
+                            onPressed: () {
+                              searchController.clear();
+                              controller.searchTitle.value = '';
+                              FocusScope.of(context).unfocus();
+                            },
+                            icon: Icon(
+                              Icons.close,
+                              color: CustomColors.customContrastColor,
+                              size: 21,
+                            ),
+                          )
+                          : null,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(60),
                     borderSide: const BorderSide(
@@ -148,27 +170,45 @@ class _HomeTabState extends State<HomeTab> {
                 return Expanded(
                   child:
                       !controller.isProductLoading
-                          ? GridView.builder(
-                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                            physics: const BouncingScrollPhysics(),
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  mainAxisSpacing: 10,
-                                  crossAxisSpacing: 10,
-                                  childAspectRatio: 9 / 11.05,
+                          ? Visibility(
+                            visible:
+                                (controller.currentCategory?.items ?? [])
+                                    .isNotEmpty,
+                            replacement: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.search_off,
+                                  size: 40,
+                                  color: CustomColors.customSwatchColor,
                                 ),
-                            itemCount: controller.allProducts.length,
-                            itemBuilder: (_, i) {
-                              if (((i + 1) == controller.allProducts.length) &&
-                                  !controller.isLastPage) {
-                                controller.loadMoreProducts();
-                              }
-                              return ItemTile(
-                                item: controller.allProducts[i],
-                                cartAnimationMethod: itemSelectedCartAnimations,
-                              );
-                            },
+                                const Text('Não há itens para apresentar'),
+                              ],
+                            ),
+                            child: GridView.builder(
+                              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                              physics: const BouncingScrollPhysics(),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    mainAxisSpacing: 10,
+                                    crossAxisSpacing: 10,
+                                    childAspectRatio: 9 / 11.05,
+                                  ),
+                              itemCount: controller.allProducts.length,
+                              itemBuilder: (_, i) {
+                                if (((i + 1) ==
+                                        controller.allProducts.length) &&
+                                    !controller.isLastPage) {
+                                  controller.loadMoreProducts();
+                                }
+                                return ItemTile(
+                                  item: controller.allProducts[i],
+                                  cartAnimationMethod:
+                                      itemSelectedCartAnimations,
+                                );
+                              },
+                            ),
                           )
                           : GridView.count(
                             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),

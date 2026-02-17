@@ -22,9 +22,16 @@ class HomeController extends GetxController {
     return currentCategory!.pagination * itemsPerPage > allProducts.length;
   }
 
+  RxString searchTitle = ''.obs;
+
   @override
   void onInit() {
     super.onInit();
+    debounce(
+      searchTitle,
+      (_) => filterByTitle(),
+      time: const Duration(milliseconds: 600),
+    );
     getAllCategories();
   }
 
@@ -71,6 +78,13 @@ class HomeController extends GetxController {
       'itemsPerPage': itemsPerPage,
     };
 
+    if (searchTitle.value.isNotEmpty) {
+      body['title'] = searchTitle.value;
+      if (currentCategory!.id == '') {
+        body.remove('categoryId');
+      }
+    }
+
     HomeResult<ItemModel> homeResult = await _homeRepository.getAllProducts(
       body,
     );
@@ -89,5 +103,36 @@ class HomeController extends GetxController {
   void loadMoreProducts() {
     currentCategory!.pagination++;
     getAllProducts(canLoad: false);
+  }
+
+  void filterByTitle() {
+    for (var category in allCategories) {
+      category.items.clear();
+      category.pagination = 0;
+    }
+
+    if (searchTitle.value.isEmpty) {
+      allCategories.removeAt(0);
+    } else {
+      CategoryModel? c = allCategories.firstWhereOrNull((cat) => cat.id == '');
+
+      if (c == null) {
+        final allProductsCategory = CategoryModel(
+          title: 'Todos',
+          id: '',
+          items: [],
+          pagination: 0,
+        );
+
+        allCategories.insert(0, allProductsCategory);
+      } else {
+        c.items.clear();
+        c.pagination = 0;
+      }
+    }
+
+    currentCategory = allCategories.first;
+    update();
+    getAllProducts();
   }
 }
