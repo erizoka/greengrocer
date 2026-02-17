@@ -38,7 +38,6 @@ dependencies:
   mask_text_input_formatter: ^2.9.0
   badges: ^3.1.2
   intl: ^0.20.2
-  qr_flutter: ^4.1.0
   add_to_cart_animation: ^0.0.7
   fluttertoast: ^8.0.8
   shimmer: ^3.0.0
@@ -49,6 +48,7 @@ dependencies:
   freezed: ^3.2.5
   freezed_annotation: ^3.1.0
   flutter_secure_storage: ^10.0.0
+  clipboard: ^3.0.14
 
 dev_dependencies:
   flutter_test:
