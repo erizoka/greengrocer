@@ -16,6 +16,8 @@ class CartController extends GetxController {
 
   List<CartItemModel> cartItems = [];
 
+  bool isCheckouLoading = false;
+
   @override
   void onInit() {
     super.onInit();
@@ -114,14 +116,23 @@ class CartController extends GetxController {
     update();
   }
 
+  setCheckouLoading(bool value) {
+    isCheckouLoading = value;
+    update();
+  }
+
   Future checkoutCart() async {
+    setCheckouLoading(true);
     CartResult<OrderModel> result = await _cartRepository.checkoutCart(
       token: _authController.user.token!,
       total: cartTotalPrice(),
     );
 
+    setCheckouLoading(false);
     result.when(
       success: (order) {
+        cartItems.clear();
+        update();
         showDialog(
           context: Get.context!,
           builder: (_) => PaymentDialog(order: order),

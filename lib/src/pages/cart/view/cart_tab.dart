@@ -14,7 +14,6 @@ class CartTab extends StatefulWidget {
 
 class _CartTabState extends State<CartTab> {
   final UtilsServices utilServices = UtilsServices();
-  final cartController = Get.find<CartController>();
 
   @override
   Widget build(BuildContext context) {
@@ -79,21 +78,33 @@ class _CartTabState extends State<CartTab> {
                 ),
                 SizedBox(
                   height: 50,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadiusGeometry.circular(18),
-                      ),
-                      backgroundColor: CustomColors.customSwatchColor,
-                    ),
-                    onPressed: () async {
-                      bool? result = await showOrderConfirmation();
-                      if (result ?? false) cartController.checkoutCart();
+                  child: GetBuilder<CartController>(
+                    builder: (controller) {
+                      return ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadiusGeometry.circular(18),
+                          ),
+                          backgroundColor: CustomColors.customSwatchColor,
+                        ),
+                        onPressed:
+                            controller.isCheckouLoading
+                                ? null
+                                : () async {
+                                  bool? result = await showOrderConfirmation();
+                                  if (result ?? false) {
+                                    controller.checkoutCart();
+                                  }
+                                },
+                        child:
+                            controller.isCheckouLoading
+                                ? const CircularProgressIndicator()
+                                : const Text(
+                                  'Concluir pedido',
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                      );
                     },
-                    child: const Text(
-                      'Concluir pedido',
-                      style: TextStyle(fontSize: 18),
-                    ),
                   ),
                 ),
               ],
