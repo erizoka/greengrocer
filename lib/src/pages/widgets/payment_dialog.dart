@@ -50,7 +50,10 @@ class PaymentDialog extends StatelessWidget {
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(width: 2, color: Colors.green),
                   ),
-                  onPressed: () => FlutterClipboard.copy(order.copyAndPaste),
+                  onPressed: () {
+                    FlutterClipboard.copy(order.copyAndPaste);
+                    utilsServices.showToast(msg: 'Código copiado');
+                  },
                   icon: const Icon(Icons.copy, size: 15),
                   label: const Text(
                     'Copirar código PIX',

@@ -139,7 +139,7 @@ class CartController extends GetxController {
         );
       },
       error: (message) {
-        _utilsServices.showToast(msg: message);
+        _utilsServices.showToast(msg: message, isError: true);
       },
     );
   }
