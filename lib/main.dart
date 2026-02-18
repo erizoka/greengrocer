@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:greengrocer/src/pages/auth/controller/auth_controller.dart';
 import 'package:greengrocer/src/routes/app_pages.dart';
@@ -6,7 +7,11 @@ import 'package:greengrocer/src/routes/app_pages.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   Get.put(AuthController());
-  runApp(const MyApp());
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((
+    _,
+  ) {
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {

@@ -88,7 +88,8 @@ class _CartTabState extends State<CartTab> {
                           backgroundColor: CustomColors.customSwatchColor,
                         ),
                         onPressed:
-                            controller.isCheckouLoading
+                            (controller.isCheckouLoading ||
+                                    controller.cartItems.isEmpty)
                                 ? null
                                 : () async {
                                   bool? result = await showOrderConfirmation();
