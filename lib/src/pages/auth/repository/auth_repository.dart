@@ -48,6 +48,26 @@ class AuthRepository {
     );
   }
 
+  Future<bool> changePassword({
+    required String email,
+    required String currentPassword,
+    required String newPassword,
+    required String token,
+  }) async {
+    final response = await _httpManager.restRequest(
+      url: Endpoints.changePassword,
+      method: HttpMethods.post,
+      headers: {'X-Parse-Session-Token': token},
+      body: {
+        'email': email,
+        'currentPassword': currentPassword,
+        'newPassword': newPassword,
+      },
+    );
+
+    return response['error'] == null;
+  }
+
   handleUserOrErro(Map<dynamic, dynamic> response) {
     if (response['result'] != null) {
       final user = UserModel.fromJson(response['result']);

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:greengrocer/src/pages/auth/controller/auth_controller.dart';
 import 'package:greengrocer/src/pages/widgets/custom_text_field.dart';
-import 'package:greengrocer/src/config/app_data.dart' as appData;
+import 'package:greengrocer/src/services/validators.dart';
 
 class ProfileTabs extends StatefulWidget {
   const ProfileTabs({super.key});
@@ -33,26 +33,26 @@ class _ProfileTabsState extends State<ProfileTabs> {
           CustomTextField(
             icon: Icons.email,
             label: 'Email',
-            initialValue: appData.user.email,
+            initialValue: _authController.user.email,
             readOnly: true,
           ),
           CustomTextField(
             icon: Icons.person,
             label: 'Nome',
-            initialValue: appData.user.name,
+            initialValue: _authController.user.name,
             readOnly: true,
           ),
           CustomTextField(
             icon: Icons.phone,
             label: 'Celular',
-            initialValue: appData.user.phone,
+            initialValue: _authController.user.phone,
             readOnly: true,
           ),
           CustomTextField(
             icon: Icons.copy,
             label: 'CPF',
             isSecret: true,
-            initialValue: appData.user.cpf,
+            initialValue: _authController.user.cpf,
             readOnly: true,
           ),
           SizedBox(
@@ -74,6 +74,10 @@ class _ProfileTabsState extends State<ProfileTabs> {
   }
 
   Future<bool?> updatePassword() {
+    final currentPasswordController = TextEditingController();
+    final newPasswordController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+
     return showDialog(
       context: context,
       builder: (ctx) {
@@ -85,49 +89,83 @@ class _ProfileTabsState extends State<ProfileTabs> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: Text(
-                        'Atualização de senha',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    CustomTextField(
-                      icon: Icons.lock,
-                      label: 'Senha atual',
-                      isSecret: true,
-                    ),
-                    CustomTextField(
-                      icon: Icons.lock_outline,
-                      label: 'Nova senha',
-                      isSecret: true,
-                    ),
-                    CustomTextField(
-                      icon: Icons.lock_outline,
-                      label: 'Confirmar nova senha',
-                      isSecret: true,
-                    ),
-                    SizedBox(
-                      height: 45,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadiusGeometry.circular(20),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: Text(
+                          'Atualização de senha',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        onPressed: () {},
-                        child: const Text('Atualizar'),
                       ),
-                    ),
-                  ],
+                      CustomTextField(
+                        controller: currentPasswordController,
+                        icon: Icons.lock,
+                        label: 'Senha atual',
+                        isSecret: true,
+                        validator: passwordValidator,
+                      ),
+                      CustomTextField(
+                        controller: newPasswordController,
+                        icon: Icons.lock_outline,
+                        label: 'Nova senha',
+                        isSecret: true,
+                        validator: passwordValidator,
+                      ),
+                      CustomTextField(
+                        icon: Icons.lock_outline,
+                        label: 'Confirmar nova senha',
+                        isSecret: true,
+                        validator: (password) {
+                          final result = passwordValidator(password);
+                          if (result != null) {
+                            return result;
+                          }
+
+                          if (password != newPasswordController.text) {
+                            return 'As senhas não são equivalentes';
+                          }
+
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                        height: 45,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadiusGeometry.circular(20),
+                            ),
+                          ),
+                          onPressed:
+                              _authController.isLoading.value
+                                  ? null
+                                  : () {
+                                    if (formKey.currentState!.validate()) {
+                                      _authController.changePassword(
+                                        currentPassword:
+                                            currentPasswordController.text,
+                                        newPassword: newPasswordController.text,
+                                      );
+                                    }
+                                    ;
+                                  },
+                          child:
+                              _authController.isLoading.value
+                                  ? const CircularProgressIndicator()
+                                  : const Text('Atualizar'),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Positioned(
