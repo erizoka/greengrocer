@@ -27,7 +27,7 @@ class OrderTile extends StatelessWidget {
           builder: (controller) {
             return ExpansionTile(
               onExpansionChanged: (value) {
-                if (value && order.items.isEmpty) {
+                if (value && controller.order.items.isEmpty) {
                   controller.getOrderItems();
                 }
               },
